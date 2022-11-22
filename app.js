@@ -12,16 +12,16 @@ const app = express()
 //? Json request available
 app.use(express.json())
 
-//? Para verificar que todo esta bien
+//? To prove the server
 app.get('/', (req, res) => {
     res.status(200).json({message: 'Ok'})
 })
 
-//? Rutas de usuarios
+//? Version one user routes
 app.use('/api/v1', userRoutersV1)
 
 
-//? Cualquier ruta que no este definida 
+//? Any route not defined
 app.use((req, res) => {
     console.log(req.path)
     res.status(404).json({message:"Not found"})
