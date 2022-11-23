@@ -23,21 +23,58 @@ const findUserById = (id) => {
 }
 
 //? Para la creacion de un nuevo usuario
-const createNewUser = () => {
+const createNewUser = (obj) => {
+    const dateFormat = new Date(obj.birthday)
+    const dateOfBirth = dateFormat.toISOString().split('T')[0].replaceAll('-','/')
     const newUser = {
         id: id++,
         first_name: obj.first_name,
 	    last_name: obj.last_name,
 	    email: obj.email,
 	    password: obj.password,
-	    birthday: obj.birthday ? obj.birthday : 'birthday unknown' //? Es un campo opcional
+	    birthday: obj.birthday ? dateOfBirth : '' //? Es un campo opcional
     }
     usersDB.push(newUser)
     return newUser
 }
 
+//?Actualiza los usuarios
+const updateUser = (id, obj) => {
+    const dateFormat = new Date(obj.birthday)
+    const dateOfBirth = dateFormat.toISOString().split('T')[0].replaceAll('-','/')
+    if(findUserById(id)){
+        const userIndex = usersDB.findIndex(user=>user.id==id)
+        usersDB.splice(userIndex, 1, {
+            id: id++,
+            first_name: obj.first_name,
+            last_name: obj.last_name,
+            email: obj.email,
+            password: obj.password,
+            birthday: obj.birthday ? dateOfBirth : '' //? Es un campo opcional
+            //? En la parte del la fecha deben de ponerla en string y se le puede agregar - o / para la misma
+        })
+        return {message: "User updated successfully"}
+    }else {
+        return {message: `User with id: ${id} not found`}
+    }
+}
+
+//? Borra los usuarios
+const dropUser = (id) => {
+    if(findUserById(id)){
+        const userIndex = usersDB.findIndex(user=>user.id==id)
+        usersDB.splice(userIndex, 1)
+        return {message: "User deleted!"}
+    }else{
+        return {message: `User with id: ${id} not found`}
+    }
+}
+
 module.exports = {
     findAllUsers,
     findUserById,
-    createNewUser
+    createNewUser,
+    updateUser,
+    dropUser
 }
+
